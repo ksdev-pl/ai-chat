@@ -1,23 +1,36 @@
-<script setup lang="ts">
-import {RouterLink, RouterView} from 'vue-router';
-import HelloWorld from './components/HelloWorld.vue';
-</script>
+<script setup lang="ts"></script>
 
 <template>
-  <header>
-    <div>
-      <div class="text-center mb-20">
-        <h1 class="text-4xl font-bold text-blue-500">Hello, Tailwind!</h1>
-        <p class="text-amber-700">This is a vue app styled with TailwindCSS.</p>
+  <div class="flex flex-col h-screen bg-black text-white">
+
+    <!-- Header -->
+    <div class="p-4 bg-gray-900">
+      Header
+    </div>
+
+    <!-- Content -->
+    <div class="flex flex-1 overflow-hidden">
+
+      <!-- Sidebar -->
+      <div class="p-4 bg-gray-800 w-64 flex flex-col">
+        <ul class="overflow-auto">
+          <li>Menu Item 1</li>
+          <li>Menu Item 2</li>
+          <!-- Repeat for as many menu items. -->
+        </ul>
       </div>
 
-      <HelloWorld msg="You did it!" />
-      <ul>
-        <li><RouterLink to="/">Home</RouterLink></li>
-        <li><RouterLink to="/about">About</RouterLink></li>
-      </ul>
-    </div>
-  </header>
+      <!-- Main Contents -->
+      <main class="flex-1 p-4 overflow-auto">
+        Your contents go here.
+      </main>
 
-  <RouterView />
+    </div>
+
+  </div>
+
+<!--  <RouterLink to="/">Home</RouterLink>-->
+<!--  <RouterLink to="/about">About</RouterLink>-->
+<!--  -->
+<!--  <RouterView />-->
 </template>
