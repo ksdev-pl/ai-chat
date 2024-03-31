@@ -1,10 +1,16 @@
 <script setup lang="ts">
 import {ref} from 'vue';
+import OpenAI from 'openai';
 
 const input = ref('');
 
+const openai = new OpenAI({
+  apiKey: import.meta.env.VITE_OPENAI_API_KEY,
+  dangerouslyAllowBrowser: true
+});
+
 function onClick() {
-  alert(input.value);
+  alert(openai.apiKey);
 }
 </script>
 
