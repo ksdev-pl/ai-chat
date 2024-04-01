@@ -1,57 +1,56 @@
 <script setup lang="ts">
-import {computed, ref} from 'vue';
-import OpenAI from 'openai';
-import {PlayIcon} from '@heroicons/vue/24/outline';
-import type {ChatCompletionMessageParam} from 'openai/resources/chat/completions';
-import {Role} from '@/models/role.model';
-import {useAppStore} from '@/stores/app';
+  import {computed, ref} from 'vue';
+  import OpenAI from 'openai';
+  import {PlayIcon} from '@heroicons/vue/24/outline';
+  import type {ChatCompletionMessageParam} from 'openai/resources/chat/completions';
+  import {Role} from '@/models/role.model';
+  import {useChatStore} from '@/stores/chat.store';
 
-const input = ref('');
-const numOfInputRows = ref(1);
-const inputTextarea = ref<HTMLTextAreaElement | null>(null);
+  const input = ref('');
+  const numOfInputRows = ref(1);
+  const inputTextarea = ref<HTMLTextAreaElement | null>(null);
+  const chatStore = useChatStore();
+  const isSendBtnEnabled = computed(() => input.value?.trim().length > 0);
 
-const store = useAppStore();
+  const openai = new OpenAI({
+    apiKey: import.meta.env.VITE_OPENAI_API_KEY,
+    dangerouslyAllowBrowser: true
+  });
 
-const isSendBtnEnabled = computed(() => input.value?.trim().length > 0);
+  async function onSend() {
+    console.log('onSend');
+    inputTextarea.value?.blur();
 
-const openai = new OpenAI({
-  apiKey: import.meta.env.VITE_OPENAI_API_KEY,
-  dangerouslyAllowBrowser: true
-});
+    await chatStore.addMessageToCurrentChat({role: Role.user, content: input.value});
 
-function onSend() {
-  inputTextarea.value?.blur();
+    input.value = '';
 
-  store.addMessageToCurrentChat({role: Role.user, content: input.value});
-
-  input.value = '';
-
-  sendRequestToOpenAI();
-}
-
-async function sendRequestToOpenAI() {
-  console.log({sendRequestToOpenAI: store.currentChatId});
-  if (store.currentChat) {
-    const completion = await openai.chat.completions.create({
-      messages: store.currentChat.messages as ChatCompletionMessageParam[],
-      model: 'gpt-3.5-turbo',
-      temperature: 0.7,
-      max_tokens: 2025
-    });
-
-    store.addMessageToCurrentChat({
-      role: completion.choices[0].message.role as Role,
-      content: completion.choices[0].message.content
-    });
+    await sendRequestToOpenAI();
   }
-}
+
+  async function sendRequestToOpenAI() {
+    console.log('sendRequestToOpenAI');
+    if (chatStore.currentChat) {
+      const completion = await openai.chat.completions.create({
+        messages: chatStore.currentChat.messages as ChatCompletionMessageParam[],
+        model: 'gpt-3.5-turbo',
+        temperature: 0.7,
+        max_tokens: 2025
+      });
+
+      await chatStore.addMessageToCurrentChat({
+        role: completion.choices[0].message.role,
+        content: completion.choices[0].message.content
+      });
+    }
+  }
 </script>
 
 <template>
   <div class="flex flex-1 flex-col overflow-auto">
     <main class="flex-1 p-4 overflow-auto">
-      <template v-if="store.currentChat">
-        <div v-for="(message, index) in store.currentChat.messages"
+      <template v-if="chatStore.currentChat">
+        <div v-for="(message, index) in chatStore.currentChat.messages"
              :key="index" class="bg-gray-100 p-2 rounded mb-4 whitespace-pre-wrap"
              :class="{'bg-gray-100 mr-20': message.role === Role.user, 'bg-gray-50 ml-20': message.role === Role.assistant}">
           {{message.content}}
