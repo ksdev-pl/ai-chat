@@ -8,8 +8,8 @@ const store = useAppStore();
   <Transition name="slide">
     <div class="p-4 bg-gray-100 w-64 flex flex-col" v-if="store.isSidebarVisible">
       <ul class="overflow-auto">
-        <li>Menu Item 1</li>
-        <li>Menu Item 2</li>
+        <li><a href="#">Menu Item 1</a></li>
+        <li><a href="#">Menu Item 2</a></li>
       </ul>
     </div>
   </Transition>

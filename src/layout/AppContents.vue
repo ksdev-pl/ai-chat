@@ -3,6 +3,7 @@ import {computed, ref} from 'vue';
 import OpenAI from 'openai';
 
 const input = ref('');
+const numOfInputRows = ref(1);
 
 const isSendBtnEnabled = computed(() => input.value?.trim().length > 0);
 
@@ -25,10 +26,12 @@ function onClick() {
         Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Curabitur in blandit sapien. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Fusce diam neque, ullamcorper ut risus nec, eleifend scelerisque velit. Morbi varius sem nec leo lacinia, vel cursus tortor tincidunt. Sed semper est id est lacinia, vel ullamcorper dui mattis. Quisque sit amet tempus mi. </div>
     </main>
     <div class="flex w-full p-4">
-      <input class="bg-gray-100 flex-grow p-2"
-             type="text"
-             placeholder="Input"
-             v-model="input"/>
+      <textarea class="bg-gray-100 flex-grow p-2"
+                :rows="numOfInputRows"
+                placeholder="Input"
+                @focusin="numOfInputRows = 10"
+                @focusout="numOfInputRows = 1"
+                v-model="input"/>
       <button class="ml-2 p-2 rounded bg-blue-600 hover:bg-blue-500 active:bg-blue-700 active:outline active:outline-2 active:outline-blue-500 disabled:bg-gray-100 disabled:text-gray-300 text-white"
               @click="onClick"
               :disabled="!isSendBtnEnabled">
