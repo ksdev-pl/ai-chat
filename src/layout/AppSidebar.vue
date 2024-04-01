@@ -5,31 +5,10 @@ const store = useAppStore();
 </script>
 
 <template>
-  <Transition name="slide">
-    <div class="p-4 bg-gray-100 w-64 flex flex-col" v-if="store.isSidebarVisible">
-      <ul class="overflow-auto">
-        <li><a href="#">Menu Item 1</a></li>
-        <li><a href="#">Menu Item 2</a></li>
-      </ul>
-    </div>
-  </Transition>
+  <div class="p-4 bg-gray-100 w-64 flex flex-col text-gray-500" v-if="store.isSidebarVisible">
+    <ul class="overflow-auto">
+      <li><a href="#" class="hover:text-blue-600">Menu Item 1</a></li>
+      <li><a href="#" class="hover:text-blue-600">Menu Item 2</a></li>
+    </ul>
+  </div>
 </template>
-
-<style scoped>
-.slide-enter-active,
-.slide-leave-active {
-  transition: transform .5s ease;
-}
-.slide-enter-from {
-  transform: translateX(-100%);
-}
-.slide-enter-to {
-  transform: translateX(0);
-}
-.slide-leave-from {
-  transform: translateX(0);
-}
-.slide-leave-to {
-  transform: translateX(-100%);
-}
-</style>
