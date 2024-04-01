@@ -2,13 +2,17 @@
 import {computed, ref} from 'vue';
 import OpenAI from 'openai';
 import {PlayIcon} from '@heroicons/vue/24/outline';
+import {db} from '@/db';
+import type {Message} from '@/models/message.model';
 import type {ChatCompletionMessageParam} from 'openai/resources/chat/completions';
+import {Role} from '@/models/role.model';
+import Dexie from 'dexie';
 
 const input = ref('');
 const numOfInputRows = ref(1);
 const inputTextarea = ref<HTMLTextAreaElement | null>(null);
-
-const messages = ref<ChatCompletionMessageParam[]>([]);
+const messages = ref<Message[]>([]);
+const currentChatId = ref<number|null>(null);
 
 const isSendBtnEnabled = computed(() => input.value?.trim().length > 0);
 
@@ -20,7 +24,7 @@ const openai = new OpenAI({
 function onSend() {
   inputTextarea.value?.blur();
 
-  messages.value.push({role: 'user', content: input.value});
+  messages.value.push({role: Role.user, content: input.value});
 
   input.value = '';
 
@@ -29,19 +33,45 @@ function onSend() {
 
 async function sendRequestToOpenAI() {
   const completion = await openai.chat.completions.create({
-    messages: messages.value,
+    messages: messages.value as ChatCompletionMessageParam[],
     model: 'gpt-3.5-turbo',
     temperature: 0.7,
     max_tokens: 2025
   });
-  messages.value.push(completion.choices[0].message);
+  messages.value.push({
+    role: completion.choices[0].message.role as Role,
+    content: completion.choices[0].message.content
+  });
+
+  storeChatInDb();
+}
+
+async function storeChatInDb() {
+  try {
+    const rawMessages = Dexie.deepClone(messages.value);
+    if (currentChatId.value === null) {
+      currentChatId.value = await db.chats.add({
+        messages: rawMessages,
+      });
+    } else {
+      const currentChat = await db.chats.get({id: currentChatId.value});
+      if (currentChat) {
+        currentChat.messages = rawMessages;
+        await db.chats.put(currentChat);
+      } else {
+        console.error(`Chat not in DB. ID: ${currentChatId.value}`);
+      }
+    }
+  } catch (error) {
+    console.error(error);
+  }
 }
 </script>
 
 <template>
   <div class="flex flex-1 flex-col overflow-auto">
     <main class="flex-1 p-4 overflow-auto">
-      <div v-for="(message, index) in messages" :key="index" class="bg-gray-100 p-2 rounded mb-4 whitespace-pre-wrap" :class="{'bg-gray-100 mr-20': message.role === 'user', 'bg-gray-50 ml-20': message.role !== 'user'}">{{message.content}}</div>
+      <div v-for="(message, index) in messages" :key="index" class="bg-gray-100 p-2 rounded mb-4 whitespace-pre-wrap" :class="{'bg-gray-100 mr-20': message.role === Role.user, 'bg-gray-50 ml-20': message.role === Role.assistant}">{{message.content}}</div>
     </main>
     <div class="flex w-full p-4" @focusin="numOfInputRows = 10" @focusout="numOfInputRows = 1">
       <textarea class="bg-gray-100 flex-grow p-2"
