@@ -3,7 +3,7 @@
 </script>
 
 <template>
-  <div class="p-4 bg-gray-900">
+  <div class="p-4 bg-gray-200">
     Header
   </div>
 </template>
