@@ -18,18 +18,30 @@
   });
 
   async function onSend() {
-    console.log('onSend');
     inputTextarea.value?.blur();
-
-    await chatStore.addMessageToCurrentChat({role: Role.user, content: input.value});
-
+    await chatStore.addMessage({role: Role.user, content: input.value});
+    sendRequestForTitle(input.value);
     input.value = '';
-
-    await sendRequestToOpenAI();
+    sendRequestForResponse();
   }
 
-  async function sendRequestToOpenAI() {
-    console.log('sendRequestToOpenAI');
+  async function sendRequestForTitle(message: string) {
+    if (chatStore.currentChat && !chatStore.currentChat.title) {
+      const completion = await openai.chat.completions.create({
+        messages: [{
+          role: Role.user,
+          content: 'Summarize the input in no more than 5 words using the same language as input.'
+            + `Output only the title. The input is: ${message}`
+        }],
+        model: 'gpt-3.5-turbo',
+        temperature: 0.4,
+        max_tokens: 2025
+      });
+      await chatStore.setChatTitle(completion.choices[0].message.content);
+    }
+  }
+
+  async function sendRequestForResponse() {
     if (chatStore.currentChat) {
       const completion = await openai.chat.completions.create({
         messages: chatStore.currentChat.messages as ChatCompletionMessageParam[],
@@ -37,8 +49,7 @@
         temperature: 0.7,
         max_tokens: 2025
       });
-
-      await chatStore.addMessageToCurrentChat({
+      await chatStore.addMessage({
         role: completion.choices[0].message.role,
         content: completion.choices[0].message.content
       });

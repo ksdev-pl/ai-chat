@@ -8,57 +8,57 @@ import type {Message} from '@/models/message.model';
 export const useChatStore = defineStore('chat', () => {
   const chats = ref<Chat[]>([]);
   const currentChatId = ref<number|null>(null);
+
   const currentChat = computed(() => chats.value.find(item => item.id === currentChatId.value));
 
+  function setCurrentChatId(id: number|null) {
+    currentChatId.value = id;
+  }
+
   async function reloadChats() {
-    console.log('reloadChats');
     try {
       chats.value = await db.chats.toArray();
-    } catch (error) {
-      console.error(error);
+    } catch (e) {
+      console.error(e);
     }
   }
 
-  async function addMessageToCurrentChat(message: Message) {
-    console.log('addMessageToCurrentChat');
-    let messages;
+  async function addMessage(message: Message) {
     if (currentChat.value) {
-      messages = currentChat.value.messages;
-      messages.push(message);
+      const messages = [...Dexie.deepClone(currentChat.value.messages), message];
+      try {
+        await db.chats.update(currentChatId.value, {messages});
+      } catch (e) {
+        console.error(e);
+      }
     } else {
-      messages = [message];
+      try {
+        setCurrentChatId(await db.chats.add({title: null, messages: [message]}));
+      } catch (e) {
+        console.error(e);
+      }
     }
-    await storeOrUpdateCurrentChatInDb(messages);
+    await reloadChats();
   }
 
-  async function storeOrUpdateCurrentChatInDb(messages: Message[]) {
-    console.log('storeOrUpdateCurrentChatInDb');
-    try {
-      const rawMessages = Dexie.deepClone(messages);
-      if (currentChatId.value === null) {
-        currentChatId.value = await db.chats.add({
-          messages: rawMessages,
-        });
-      } else {
-        const currentChat = await db.chats.get({id: currentChatId.value});
-        if (currentChat) {
-          currentChat.messages = rawMessages;
-          await db.chats.put(currentChat);
-        } else {
-          console.error(`Chat not in DB. ID: ${currentChatId.value}`);
-        }
+  async function setChatTitle(title: string|null) {
+    if (currentChat.value) {
+      try {
+        await db.chats.update(currentChatId.value, {title});
+      } catch (e) {
+        console.error(e);
       }
-      await reloadChats();
-    } catch (error) {
-      console.error(error);
     }
+    await reloadChats();
   }
 
   return {
     chats,
     currentChatId,
     currentChat,
+    setCurrentChatId,
     reloadChats,
-    addMessageToCurrentChat
+    addMessage,
+    setChatTitle
   };
 });
