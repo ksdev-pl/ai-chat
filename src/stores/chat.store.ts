@@ -34,7 +34,13 @@ export const useChatStore = defineStore('chat', () => {
       }
     } else {
       try {
-        setCurrentChatId(await db.chats.add({title: null, messages: [message]}));
+        setCurrentChatId(await db.chats.add({
+          title: null,
+          messages: [
+            {role: Role.system, content: 'Answer in markdown'},
+            message
+          ]
+        }));
       } catch (e) {
         console.error(e);
       }
