@@ -5,12 +5,26 @@
   import type {ChatCompletionMessageParam} from 'openai/resources/chat/completions';
   import {Role} from '@/models/role.model';
   import {useChatStore} from '@/stores/chat.store';
+  import MarkdownIt from 'markdown-it';
+  import hljs from 'highlight.js';
 
   const input = ref('');
   const numOfInputRows = ref(1);
   const inputTextarea = ref<HTMLTextAreaElement|null>(null);
   const chatStore = useChatStore();
   const scrollingDiv = ref<HTMLElement|null>(null);
+
+  const md = new MarkdownIt({
+    breaks: true,
+    highlight: function (str, lang) {
+      if (lang && hljs.getLanguage(lang)) {
+        try {
+          return hljs.highlight(str, {language: lang}).value;
+        } catch (__) {}
+      }
+      return ''; // use external default escaping
+    }
+  }) as any;
 
   const isSendBtnEnabled = computed(() => input.value?.trim().length > 0);
 
@@ -72,18 +86,14 @@
     <main class="flex-1 p-4 overflow-auto" ref="scrollingDiv">
       <template v-if="chatStore.currentChat">
         <template v-for="(message, index) in chatStore.currentChat.messages" :key="index">
-          <template v-if="message.role === Role.user">
+          <template v-if="message.content && message.role === Role.user">
             <div class="flex">
-              <div class="bg-green-600 py-2 px-3 rounded mb-4 whitespace-pre-wrap text-white">
-                {{message.content}}
-              </div>
+              <div class="bg-green-600 py-2 px-3 rounded mb-4 text-white message-content" v-html="md.render(message.content)"/>
             </div>
           </template>
-          <template v-if="message.role === Role.assistant">
+          <template v-if="message.content && message.role === Role.assistant">
             <div class="flex">
-              <div class="bg-gray-50 py-2 px-3 rounded mb-4 whitespace-pre-wrap ml-10">
-                {{message.content}}
-              </div>
+              <div class="bg-gray-50 py-2 px-3 rounded mb-4 ml-10 message-content" v-html="md.render(message.content)"/>
             </div>
           </template>
         </template>
@@ -104,3 +114,25 @@
     </div>
   </div>
 </template>
+
+<style>
+  @import 'highlight.js/styles/github.css';
+
+  .message-content {
+    pre:not(:last-child), p:not(:last-child), ol:not(:last-child), li:not(:last-child) {
+      margin-bottom: 0.5rem;
+    }
+
+    pre {
+      margin-left: 2rem;
+    }
+
+    code:not(pre code) {
+      color: #22863a;
+    }
+
+    a {
+      color: rgb(37 99 235);
+    }
+  }
+</style>
