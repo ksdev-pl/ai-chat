@@ -127,12 +127,22 @@
       margin-left: 2rem;
     }
 
-    code:not(pre code) {
+    /*code:not(pre code) {
       color: #22863a;
-    }
+    }*/
 
     a {
       color: rgb(37 99 235);
+    }
+
+    ul {
+      list-style-type: disc;
+      margin-left: 2rem;
+    }
+
+    ol {
+      list-style-type: decimal;
+      margin-left: 2rem;
     }
   }
 </style>
