@@ -48,8 +48,8 @@
       const completion = await openai.chat.completions.create({
         messages: [{
           role: Role.user,
-          content: 'Summarize the input in no more than 5 words using the same language as input.'
-            + `Output only the title. The input is: ${message}`
+          content: 'Summarize the input as title of no more than 5 words.'
+            + `Output only the summarized title. The input is: ${message}`
         }],
         model: 'gpt-3.5-turbo',
         temperature: 0.4,
@@ -94,7 +94,7 @@
           </template>
           <template v-if="message.content && message.role === Role.assistant">
             <div class="flex">
-              <div class="py-2 px-3 rounded mb-4 ml-10 message-content" v-html="md.render(message.content)"/>
+              <div class="py-2 px-3 rounded mb-4 ml-5 message-content" v-html="md.render(message.content)"/>
             </div>
           </template>
         </template>
@@ -126,8 +126,32 @@
     ol:not(:last-child),
     ul:not(:last-child),
     li:not(:last-child),
-    h1, h2, h3, h4, h5 {
+    table:not(:last-child),
+    blockquote:not(:last-child),
+    hr:not(:last-child),
+    h1, h2, h3, h4, h5, h6 {
       margin-bottom: 0.5rem;
+    }
+
+    blockquote {
+      margin-left: 1rem;
+      font-style: italic;
+    }
+
+    h1 {
+      font-size: 1.5rem;
+    }
+
+    h2 {
+      font-size: 1.25rem;
+    }
+
+    h3 {
+      font-size: 1.125rem;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: bold;
     }
 
     pre {
@@ -156,6 +180,11 @@
     ol {
       list-style-type: decimal;
       margin-left: 2rem;
+    }
+
+    td, th {
+      border: 1px solid black;
+      padding: 5px;
     }
   }
 </style>
