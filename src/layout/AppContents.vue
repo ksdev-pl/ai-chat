@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import {computed, ref} from 'vue';
-import OpenAI from 'openai';
-import {PlayIcon} from '@heroicons/vue/24/outline';
-import type {ChatCompletionMessageParam} from 'openai/resources/chat/completions';
-import {Role} from '@/models/role.model';
-import {useChatStore} from '@/stores/chat.store';
+  import {computed, ref} from 'vue';
+  import OpenAI from 'openai';
+  import {PlayIcon} from '@heroicons/vue/24/outline';
+  import type {ChatCompletionMessageParam} from 'openai/resources/chat/completions';
+  import {Role} from '@/models/role.model';
+  import {useChatStore} from '@/stores/chat.store';
 
-const input = ref('');
+  const input = ref('');
   const numOfInputRows = ref(1);
   const inputTextarea = ref<HTMLTextAreaElement|null>(null);
   const chatStore = useChatStore();
@@ -22,6 +22,7 @@ const input = ref('');
   async function onSend() {
     inputTextarea.value?.blur();
     await chatStore.addMessage({role: Role.user, content: input.value});
+    scrollDown();
     sendRequestForTitle(input.value);
     input.value = '';
     sendRequestForResponse();
@@ -70,11 +71,22 @@ const input = ref('');
   <div class="flex flex-1 flex-col overflow-auto">
     <main class="flex-1 p-4 overflow-auto" ref="scrollingDiv">
       <template v-if="chatStore.currentChat">
-        <div v-for="(message, index) in chatStore.currentChat.messages"
-             :key="index" class="bg-gray-100 p-2 rounded mb-4 whitespace-pre-wrap"
-             :class="{'bg-gray-100 mr-10': message.role === Role.user, 'bg-gray-50 ml-10': message.role === Role.assistant}">
-          {{message.content}}
-        </div>
+        <template v-for="(message, index) in chatStore.currentChat.messages" :key="index">
+          <template v-if="message.role === Role.user">
+            <div class="flex">
+              <div class="bg-green-600 py-2 px-3 rounded mb-4 whitespace-pre-wrap text-white">
+                {{message.content}}
+              </div>
+            </div>
+          </template>
+          <template v-else>
+            <div class="flex">
+              <div class="bg-gray-50 py-2 px-3 rounded mb-4 whitespace-pre-wrap ml-10">
+                {{message.content}}
+              </div>
+            </div>
+          </template>
+        </template>
       </template>
     </main>
     <div class="flex w-full p-4" @focusin="numOfInputRows = 10" @focusout="numOfInputRows = 1">
@@ -84,7 +96,7 @@ const input = ref('');
                 ref="inputTextarea"
                 v-model="input"
                 @keydown.ctrl.enter="onSend" />
-      <button class="ml-2 p-2 rounded bg-blue-600 hover:bg-blue-500 active:bg-blue-700 active:outline active:outline-2 active:outline-blue-500 disabled:bg-gray-100 disabled:text-gray-300 text-white"
+      <button class="ml-2 p-2 rounded bg-blue-600 hover:bg-blue-500 active:bg-blue-600 active:outline active:outline-2 active:outline-blue-500 disabled:bg-gray-100 disabled:text-gray-300 text-white"
               @click="onSend"
               :disabled="!isSendBtnEnabled">
         <PlayIcon class="h-6 w-6"></PlayIcon>
