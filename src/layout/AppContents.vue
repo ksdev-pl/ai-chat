@@ -89,7 +89,7 @@
         <template v-for="(message, index) in chatStore.currentChat.messages" :key="index">
           <template v-if="message.content && message.role === Role.user">
             <div class="flex">
-              <div class="bg-green-600 py-2 px-3 rounded mb-4 text-white message-content">{{message.content}}</div>
+              <div class="bg-green-600 py-2 px-3 rounded mb-4 text-white whitespace-pre-wrap">{{message.content}}</div>
             </div>
           </template>
           <template v-if="message.content && message.role === Role.assistant">
@@ -100,7 +100,7 @@
         </template>
       </template>
     </main>
-    <div class="flex w-full p-4" @focusin="numOfInputRows = 10" @focusout="numOfInputRows = 1">
+    <div class="flex w-full p-4" @focusin="numOfInputRows = 5" @focusout="numOfInputRows = 1">
       <textarea class="bg-gray-100 flex-grow p-2 rounded"
                 :rows="numOfInputRows"
                 placeholder="Enter your question..."
@@ -121,7 +121,12 @@
   @import 'highlight.js/styles/github.css';
 
   .message-content {
-    pre:not(:last-child), p:not(:last-child), ol:not(:last-child), ul:not(:last-child), li:not(:last-child), h1, h2, h3, h4, h5 {
+    pre:not(:last-child),
+    p:not(:last-child),
+    ol:not(:last-child),
+    ul:not(:last-child),
+    li:not(:last-child),
+    h1, h2, h3, h4, h5 {
       margin-bottom: 0.5rem;
     }
 
