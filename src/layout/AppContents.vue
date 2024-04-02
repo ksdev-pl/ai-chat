@@ -79,7 +79,7 @@
               </div>
             </div>
           </template>
-          <template v-else>
+          <template v-if="message.role === Role.assistant">
             <div class="flex">
               <div class="bg-gray-50 py-2 px-3 rounded mb-4 whitespace-pre-wrap ml-10">
                 {{message.content}}

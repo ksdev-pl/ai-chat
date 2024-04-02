@@ -37,7 +37,7 @@ export const useChatStore = defineStore('chat', () => {
         setCurrentChatId(await db.chats.add({
           title: null,
           messages: [
-            {role: Role.system, content: 'Answer in markdown'},
+            {role: Role.system, content: 'Always answer in markdown'},
             message
           ]
         }));
