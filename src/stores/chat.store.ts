@@ -4,6 +4,7 @@ import type {Chat} from '@/models/chat.model';
 import {db} from '@/db';
 import Dexie from 'dexie';
 import type {Message} from '@/models/message.model';
+import {Role} from '@/models/role.model';
 
 export const useChatStore = defineStore('chat', () => {
   const chats = ref<Chat[]>([]);
@@ -17,7 +18,7 @@ export const useChatStore = defineStore('chat', () => {
 
   async function reloadChats() {
     try {
-      chats.value = await db.chats.toArray();
+      chats.value = await db.chats.reverse().toArray();
     } catch (e) {
       console.error(e);
     }
@@ -41,15 +42,36 @@ export const useChatStore = defineStore('chat', () => {
     await reloadChats();
   }
 
-  async function setChatTitle(title: string|null) {
+  async function setCurrentChatTitle(title: string|null) {
     if (currentChat.value) {
       try {
         await db.chats.update(currentChatId.value, {title});
       } catch (e) {
         console.error(e);
       }
+      await reloadChats();
     }
-    await reloadChats();
+  }
+
+  async function updateLastMessageStream(messageChunk: string) {
+    if (currentChat.value) {
+      const messages = Dexie.deepClone(currentChat.value.messages);
+      const lastMessage = messages[messages.length - 1];
+      if (lastMessage.role === Role.assistant) {
+        lastMessage.content += messageChunk;
+      } else {
+        messages.push({
+          role: Role.assistant,
+          content: messageChunk
+        });
+      }
+      try {
+        await db.chats.update(currentChatId.value, {messages});
+      } catch (e) {
+        console.error(e);
+      }
+      await reloadChats();
+    }
   }
 
   return {
@@ -59,6 +81,7 @@ export const useChatStore = defineStore('chat', () => {
     setCurrentChatId,
     reloadChats,
     addMessage,
-    setChatTitle
+    setCurrentChatTitle,
+    updateLastMessageStream
   };
 });
