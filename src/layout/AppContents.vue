@@ -88,12 +88,12 @@
         <template v-for="(message, index) in chatStore.currentChat.messages" :key="index">
           <template v-if="message.content && message.role === Role.user">
             <div class="flex">
-              <div class="bg-green-600 py-2 px-3 rounded mb-4 text-white message-content" v-html="md.render(message.content)"/>
+              <div class="bg-green-600 py-2 px-3 rounded mb-4 text-white message-content">{{message.content}}</div>
             </div>
           </template>
           <template v-if="message.content && message.role === Role.assistant">
             <div class="flex">
-              <div class="bg-gray-50 py-2 px-3 rounded mb-4 ml-10 message-content" v-html="md.render(message.content)"/>
+              <div class="py-2 px-3 rounded mb-4 ml-10 message-content" v-html="md.render(message.content)"/>
             </div>
           </template>
         </template>
@@ -105,7 +105,8 @@
                 placeholder="Enter your question..."
                 ref="inputTextarea"
                 v-model="input"
-                @keydown.ctrl.enter="onSend" />
+                @keydown.ctrl.enter="onSend"
+                autofocus />
       <button class="ml-2 p-2 rounded bg-blue-600 hover:bg-blue-500 active:bg-blue-600 active:outline active:outline-2 active:outline-blue-500 disabled:bg-gray-100 disabled:text-gray-300 text-white"
               @click="onSend"
               :disabled="!isSendBtnEnabled">
@@ -119,17 +120,23 @@
   @import 'highlight.js/styles/github.css';
 
   .message-content {
-    pre:not(:last-child), p:not(:last-child), ol:not(:last-child), li:not(:last-child) {
+    pre:not(:last-child), p:not(:last-child), ol:not(:last-child), ul:not(:last-child), li:not(:last-child), h1, h2, h3, h4, h5 {
       margin-bottom: 0.5rem;
     }
 
     pre {
-      margin-left: 2rem;
+      margin-left: 1rem;
+      background-color: rgb(249 250 251);
+      display: inline-block;
+      border-radius: 5px;
+      padding: 0 5px;
     }
 
-    /*code:not(pre code) {
-      color: #22863a;
-    }*/
+    code:not(pre code) {
+      background-color: rgb(249 250 251);
+      border-radius: 5px;
+      padding: 0 1px;
+    }
 
     a {
       color: rgb(37 99 235);
