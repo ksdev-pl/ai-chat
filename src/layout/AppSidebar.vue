@@ -14,8 +14,11 @@
       <li class="mb-2">
         <a href="#" class="hover:text-blue-600 font-bold" @click="chatStore.setCurrentChatId(null)">New chat</a>
       </li>
-      <li v-for="chat in chatStore.chats" :key="chat.id">
-        <a href="#" class="hover:text-blue-600" v-if="chat.id" @click="chatStore.setCurrentChatId(chat.id)">{{chat.title}}</a>
+      <li v-for="chat in chatStore.chats" :key="chat.id" class="truncate">
+        <a href="#"
+           class="hover:text-blue-600"
+           :title="chat.title ? chat.title : ''"
+           @click="chatStore.setCurrentChatId(chat.id ? chat.id : null)">{{chat.title}}</a>
       </li>
     </ul>
   </div>

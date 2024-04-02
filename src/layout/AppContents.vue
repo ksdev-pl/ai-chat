@@ -16,6 +16,7 @@
 
   const md = new MarkdownIt({
     breaks: true,
+    linkify: true,
     highlight: function (str, lang) {
       if (lang && hljs.getLanguage(lang)) {
         try {
