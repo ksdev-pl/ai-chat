@@ -1,4 +1,4 @@
-# ai-chat
+# ✨ai-chat✨
 
 Yet another (open-)ai-chat with original name.
 
