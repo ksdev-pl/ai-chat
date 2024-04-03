@@ -80,6 +80,15 @@ export const useChatStore = defineStore('chat', () => {
     }
   }
 
+  async function deleteChat(chatId: number|null|undefined) {
+    try {
+      await db.chats.delete(chatId);
+    } catch (e) {
+      console.error(e);
+    }
+    await reloadChats();
+  }
+
   return {
     chats,
     currentChatId,
@@ -88,6 +97,7 @@ export const useChatStore = defineStore('chat', () => {
     reloadChats,
     addMessage,
     setCurrentChatTitle,
-    updateLastMessageStream
+    updateLastMessageStream,
+    deleteChat
   };
 });
