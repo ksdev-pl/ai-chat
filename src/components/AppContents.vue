@@ -45,6 +45,7 @@
 
   async function onSend() {
     pending.value = true;
+    userScrolled.value = false;
     inputTextarea.value?.blur();
     await chatStore.addMessage({role: Role.user, content: input.value});
     autoScrollDown();
