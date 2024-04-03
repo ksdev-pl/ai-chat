@@ -3,6 +3,7 @@
   import {computed, ref, watch} from 'vue';
   import {useSettingsStore} from '@/stores/settings.store';
   import type {SettingsForm} from '@/models/settings-form.model';
+  import {number, object, string} from 'zod';
 
   const models = [
       {name: 'gpt-3.5-turbo', value: 'gpt-3.5-turbo'},
@@ -19,14 +20,17 @@
     maxTokens: 0
   });
 
+  const formSchema = object({
+    apiKey: string().min(1),
+    temp: number(),
+    model: string(),
+    maxTokens: number()
+  });
+
   settingsStore.reloadSettings();
 
   const isSaveEnabled = computed(() => {
-    const isApiKeyValid = form.value.apiKey.trim().length > 0;
-    const isModelValid = models.filter(item => item.value === form.value.model).length > 0;
-    const isTempValid = form.value.temp != null; // TODO
-    const isMaxTokensValid = form.value.maxTokens != null; // TODO
-    return isApiKeyValid && isModelValid && isTempValid && isMaxTokensValid;
+    return formSchema.safeParse(form.value).success;
   });
 
   async function onSave() {
