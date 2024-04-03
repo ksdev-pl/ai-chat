@@ -1,4 +1,5 @@
 import flowbitePlugin from 'flowbite/plugin';
+import colors from 'tailwindcss/colors';
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -8,11 +9,13 @@ export default {
     'node_modules/flowbite-vue/**/*.{js,jsx,ts,tsx,vue}',
     'node_modules/flowbite/**/*.{js,jsx,ts,tsx}'
   ],
-  theme: {
-    extend: {},
-  },
   plugins: [
     flowbitePlugin
   ],
+  theme: {
+    extend: {
+      colors: colors
+    },
+  }
 };
 

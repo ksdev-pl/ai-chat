@@ -89,7 +89,6 @@
 
   watch(() => settingsStore.apiKey, (newValue, oldValue) => {
     if (newValue !== oldValue) {
-      console.log([oldValue, newValue]);
       openai.apiKey = settingsStore.apiKey;
     }
   });
@@ -114,7 +113,7 @@
       </template>
     </main>
     <div class="flex w-full p-4" @focusin="numOfInputRows = 5" @focusout="numOfInputRows = 1">
-      <textarea class="block p-2 w-full text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+      <textarea class="block p-2 w-full text-gray-900 bg-gray-50 rounded border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 :rows="numOfInputRows"
                 :placeholder="!isInputEnabled ? 'Enter your API key in settings' : `Chat with ${settingsStore.model}...`"
                 ref="inputTextarea"
@@ -122,7 +121,12 @@
                 @keydown.ctrl.enter="onSend"
                 :disabled="!isInputEnabled"
                 autofocus/>
-      <fwb-button color="default" @click="onSend" :disabled="!isSendBtnEnabled" class="ml-2 p-2"><PlayIcon class="h-6 w-6"></PlayIcon></fwb-button>
+      <fwb-button color="default"
+                  @click="onSend"
+                  :disabled="!isSendBtnEnabled"
+                  class="ml-2 p-2 rounded">
+        <PlayIcon class="h-6 w-6"></PlayIcon>
+      </fwb-button>
     </div>
   </div>
 </template>
