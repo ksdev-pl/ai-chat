@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {computed, ref, watch} from 'vue';
+  import {computed, ref, watch} from 'vue';
   import OpenAI from 'openai';
   import {PlayIcon} from '@heroicons/vue/24/outline';
   import type {ChatCompletionMessageParam} from 'openai/resources/chat/completions';
@@ -8,6 +8,7 @@ import {computed, ref, watch} from 'vue';
   import MarkdownIt from 'markdown-it';
   import hljs from 'highlight.js';
   import {useSettingsStore} from '@/stores/settings.store';
+  import {FwbButton} from 'flowbite-vue';
 
   const input = ref('');
   const numOfInputRows = ref(1);
@@ -113,19 +114,15 @@ import {computed, ref, watch} from 'vue';
       </template>
     </main>
     <div class="flex w-full p-4" @focusin="numOfInputRows = 5" @focusout="numOfInputRows = 1">
-      <textarea class="bg-gray-100 flex-grow p-2 rounded"
+      <textarea class="block p-2 w-full text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 :rows="numOfInputRows"
                 :placeholder="!isInputEnabled ? 'Enter your API key in settings' : `Chat with ${settingsStore.model}...`"
                 ref="inputTextarea"
                 v-model="input"
                 @keydown.ctrl.enter="onSend"
                 :disabled="!isInputEnabled"
-                autofocus />
-      <button class="ml-2 p-2 rounded bg-blue-600 hover:bg-blue-500 active:bg-blue-600 active:outline active:outline-2 active:outline-blue-500 disabled:bg-gray-100 disabled:text-gray-300 text-white"
-              @click="onSend"
-              :disabled="!isSendBtnEnabled">
-        <PlayIcon class="h-6 w-6"></PlayIcon>
-      </button>
+                autofocus/>
+      <fwb-button color="default" @click="onSend" :disabled="!isSendBtnEnabled" class="ml-2 p-2"><PlayIcon class="h-6 w-6"></PlayIcon></fwb-button>
     </div>
   </div>
 </template>
