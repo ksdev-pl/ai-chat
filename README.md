@@ -1,5 +1,7 @@
 # ✨ai-chat✨
 
+![Screenshot](.github/screenshot.jpg)
+
 Yet another (open-)ai-chat with original name.
 
 Currenly works with OpenAI models.
