@@ -185,7 +185,7 @@
     pre {
       margin-left: 1rem;
       background-color: rgb(249 250 251);
-      display: inline-block;
+      display: table;
       border-radius: 5px;
       padding: 0 5px;
     }
