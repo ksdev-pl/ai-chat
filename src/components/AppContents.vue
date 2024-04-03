@@ -8,13 +8,14 @@
   import MarkdownIt from 'markdown-it';
   import hljs from 'highlight.js';
   import {useSettingsStore} from '@/stores/settings.store';
-  import {FwbButton} from 'flowbite-vue';
+  import {FwbButton, FwbSpinner} from 'flowbite-vue';
 
   const input = ref('');
   const numOfInputRows = ref(1);
   const inputTextarea = ref<HTMLTextAreaElement|null>(null);
   const scrollingDiv = ref<HTMLElement|null>(null);
   const userScrolled = ref(false);
+  const pending = ref(false);
 
   const chatStore = useChatStore();
   const settingsStore = useSettingsStore();
@@ -34,7 +35,7 @@
     }
   });
 
-  const isInputEnabled = computed(() => settingsStore.apiKey.trim().length > 0);
+  const isInputEnabled = computed(() => settingsStore.apiKey.length > 0 && !pending.value);
   const isSendBtnEnabled = computed(() => input.value?.trim().length > 0 && settingsStore.apiKey.trim().length > 0);
 
   const openai = new OpenAI({
@@ -43,12 +44,14 @@
   });
 
   async function onSend() {
+    pending.value = true;
     inputTextarea.value?.blur();
     await chatStore.addMessage({role: Role.user, content: input.value});
     autoScrollDown();
     sendRequestForTitle(input.value);
     input.value = '';
-    sendRequestForResponse();
+    await sendRequestForResponse();
+    pending.value = false;
   }
 
   async function sendRequestForTitle(message: string) {
@@ -123,7 +126,7 @@
     <div class="flex w-full p-4" @focusin="numOfInputRows = 5" @focusout="numOfInputRows = 1">
       <textarea class="block p-2 w-full text-gray-900 bg-gray-50 rounded border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 :rows="numOfInputRows"
-                :placeholder="!isInputEnabled ? 'Enter your API key in settings' : `Chat with ${settingsStore.model}...`"
+                :placeholder="settingsStore.apiKey.length === 0 ? 'Enter your API key in settings' : `Chat with ${settingsStore.model}...`"
                 ref="inputTextarea"
                 v-model="input"
                 @keydown.ctrl.enter="onSend"
@@ -133,7 +136,8 @@
                   @click="onSend"
                   :disabled="!isSendBtnEnabled"
                   class="ml-2 p-2 rounded">
-        <PlayIcon class="h-6 w-6"></PlayIcon>
+        <PlayIcon class="h-6 w-6" v-if="!pending"></PlayIcon>
+        <fwb-spinner size="6" v-if="pending" />
       </fwb-button>
     </div>
   </div>
