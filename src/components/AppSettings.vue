@@ -60,9 +60,9 @@
       <div><fwb-input v-model="form.temp" label="Temperature" type="number" step="0.1"  /></div>
     </template>
     <template #footer>
-      <div class="flex justify-between">
-        <fwb-button @click="settingsStore.hideSettings()" color="alternative" class="rounded">Close</fwb-button>
+      <div class="flex justify-end">
         <fwb-button @click="onSave" color="blue" :disabled="!isSaveEnabled" class="rounded">Save</fwb-button>
+        <fwb-button @click="settingsStore.hideSettings()" color="alternative" class="rounded ml-2">Close</fwb-button>
       </div>
     </template>
   </fwb-modal>

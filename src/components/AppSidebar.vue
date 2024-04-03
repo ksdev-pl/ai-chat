@@ -23,11 +23,13 @@
           :key="chat.id"
           @mouseenter="activeChatId = chat.id"
           @mouseleave="activeChatId = null"
-          class="truncate relative flex items-center justify-between">
-        <a href="#"
-           class="hover:text-blue-600"
-           :title="chat.title ? chat.title : ''"
-           @click="chatStore.setCurrentChatId(chat.id ? chat.id : null)">{{chat.title}}</a>
+          class="relative flex items-center justify-between">
+        <div class="truncate">
+          <a href="#"
+             class="hover:text-blue-600"
+             :title="chat.title ? chat.title : ''"
+             @click="chatStore.setCurrentChatId(chat.id ? chat.id : null)">{{chat.title}}</a>
+        </div>
         <div class="absolute right-0">
           <fwb-button color="red"
                       outline
