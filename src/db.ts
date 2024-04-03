@@ -1,14 +1,17 @@
-import Dexie from 'dexie';
 import type {Table} from 'dexie';
+import Dexie from 'dexie';
 import type {Chat} from '@/models/chat.model';
+import type {Settings} from '@/models/settings.model';
 
 export class ChatDB extends Dexie {
   chats!: Table<Chat>;
+  settings!: Table<Settings>;
 
   constructor() {
-    super('ChatDB');
+    super('chatdb');
     this.version(1).stores({
-      chats: '++id, messages'
+      chats: '++id',
+      settings: '++id'
     });
   }
 }

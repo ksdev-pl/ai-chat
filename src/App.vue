@@ -1,7 +1,8 @@
 <script setup lang="ts">
-  import AppSidebar from '@/layout/AppSidebar.vue';
-  import AppContents from '@/layout/AppContents.vue';
-  import AppHeader from '@/layout/AppHeader.vue';
+  import AppSidebar from '@/components/AppSidebar.vue';
+  import AppContents from '@/components/AppContents.vue';
+  import AppHeader from '@/components/AppHeader.vue';
+  import AppOptions from '@/components/AppSettings.vue';
 </script>
 
 <template>
@@ -12,4 +13,5 @@
       <AppContents/>
     </div>
   </div>
+  <AppOptions></AppOptions>
 </template>

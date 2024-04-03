@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import {computed, ref} from 'vue';
+import {computed, ref, watch} from 'vue';
   import OpenAI from 'openai';
   import {PlayIcon} from '@heroicons/vue/24/outline';
   import type {ChatCompletionMessageParam} from 'openai/resources/chat/completions';
@@ -7,12 +7,14 @@
   import {useChatStore} from '@/stores/chat.store';
   import MarkdownIt from 'markdown-it';
   import hljs from 'highlight.js';
+  import {useSettingsStore} from '@/stores/settings.store';
 
   const input = ref('');
   const numOfInputRows = ref(1);
   const inputTextarea = ref<HTMLTextAreaElement|null>(null);
-  const chatStore = useChatStore();
   const scrollingDiv = ref<HTMLElement|null>(null);
+  const chatStore = useChatStore();
+  const settingsStore = useSettingsStore();
 
   const md = new MarkdownIt({
     breaks: true,
@@ -21,16 +23,19 @@
       if (lang && hljs.getLanguage(lang)) {
         try {
           return hljs.highlight(str, {language: lang}).value;
-        } catch (__) {}
+        } catch (e) {
+          console.log(e);
+        }
       }
-      return ''; // use external default escaping
+      return '';
     }
-  }) as any;
+  });
 
-  const isSendBtnEnabled = computed(() => input.value?.trim().length > 0);
+  const isInputEnabled = computed(() => settingsStore.apiKey.trim().length > 0);
+  const isSendBtnEnabled = computed(() => input.value?.trim().length > 0 && settingsStore.apiKey.trim().length > 0);
 
   const openai = new OpenAI({
-    apiKey: import.meta.env.VITE_OPENAI_API_KEY,
+    apiKey: settingsStore.apiKey,
     dangerouslyAllowBrowser: true
   });
 
@@ -63,9 +68,9 @@
     if (chatStore.currentChat) {
       const stream = await openai.chat.completions.create({
         messages: chatStore.currentChat.messages as ChatCompletionMessageParam[],
-        model: 'gpt-3.5-turbo',
-        temperature: 0.7,
-        max_tokens: 2025,
+        model: settingsStore.model,
+        temperature: settingsStore.temp,
+        max_tokens: settingsStore.maxTokens,
         stream: true
       });
       for await (const chunk of stream) {
@@ -80,6 +85,13 @@
       scrollingDiv.value.scrollTop = scrollingDiv.value.scrollHeight;
     }
   }
+
+  watch(() => settingsStore.apiKey, (newValue, oldValue) => {
+    if (newValue !== oldValue) {
+      console.log([oldValue, newValue]);
+      openai.apiKey = settingsStore.apiKey;
+    }
+  });
 </script>
 
 <template>
@@ -103,10 +115,11 @@
     <div class="flex w-full p-4" @focusin="numOfInputRows = 5" @focusout="numOfInputRows = 1">
       <textarea class="bg-gray-100 flex-grow p-2 rounded"
                 :rows="numOfInputRows"
-                placeholder="Enter your question..."
+                :placeholder="!isInputEnabled ? 'Enter your API key in settings' : `Chat with ${settingsStore.model}...`"
                 ref="inputTextarea"
                 v-model="input"
                 @keydown.ctrl.enter="onSend"
+                :disabled="!isInputEnabled"
                 autofocus />
       <button class="ml-2 p-2 rounded bg-blue-600 hover:bg-blue-500 active:bg-blue-600 active:outline active:outline-2 active:outline-blue-500 disabled:bg-gray-100 disabled:text-gray-300 text-white"
               @click="onSend"
@@ -118,7 +131,7 @@
 </template>
 
 <style>
-  @import 'highlight.js/styles/github.css';
+  @import '../../node_modules/highlight.js/styles/github.css';
 
   .message-content {
     pre:not(:last-child),
