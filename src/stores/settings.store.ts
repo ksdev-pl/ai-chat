@@ -1,6 +1,7 @@
 import {defineStore} from 'pinia';
 import {ref, watch} from 'vue';
 import {db} from '@/db';
+import type {SettingsForm} from '@/models/settings-form.model';
 
 export const useSettingsStore = defineStore('settings', () => {
   const DEFAULT_OPENAI_TEMP = 0.7;
@@ -13,6 +14,7 @@ export const useSettingsStore = defineStore('settings', () => {
   const temp = ref<number>(0);
   const model = ref<string>('');
   const maxTokens = ref<number>(0);
+  const dbReloadCount = ref(0);
 
   function showSettings() {
     areSettingsVisible.value = true;
@@ -42,19 +44,20 @@ export const useSettingsStore = defineStore('settings', () => {
         temp.value = settings.openaiTemp;
         model.value = settings.openaiModel;
         maxTokens.value = settings.openaiMaxTokens;
+        dbReloadCount.value++;
       }
     } catch (e) {
       console.error(e);
     }
   }
 
-  async function updateSettings() {
+  async function updateSettings(form: SettingsForm) {
     try {
       await db.settings.update(1, {
-        openaiApiKey: apiKey.value,
-        openaiTemp: temp.value,
-        openaiModel: model.value,
-        openaiMaxTokens: maxTokens.value
+        openaiApiKey: form.apiKey,
+        openaiTemp: form.temp,
+        openaiModel: form.model,
+        openaiMaxTokens: form.maxTokens
       });
     } catch (e) {
       console.error(e);
@@ -73,6 +76,7 @@ export const useSettingsStore = defineStore('settings', () => {
     temp,
     model,
     maxTokens,
+    dbReloadCount,
     showSettings,
     hideSettings,
     reloadSettings,
