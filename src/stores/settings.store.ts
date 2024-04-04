@@ -1,7 +1,7 @@
 import {defineStore} from 'pinia';
 import {ref, watch} from 'vue';
 import {db} from '@/db';
-import type {SettingsForm} from '@/models/settings-form.model';
+import type {Settings} from '@/models/settings.model';
 
 export const useSettingsStore = defineStore('settings', () => {
   const DEFAULT_OPENAI_TEMP = '0.7';
@@ -51,13 +51,13 @@ export const useSettingsStore = defineStore('settings', () => {
     }
   }
 
-  async function updateSettings(form: SettingsForm) {
+  async function updateSettings(form: Settings) {
     try {
       await db.settings.update(1, {
-        openaiApiKey: form.apiKey,
-        openaiTemp: form.temp,
-        openaiModel: form.model,
-        openaiMaxTokens: form.maxTokens
+        openaiApiKey: form.openaiApiKey,
+        openaiTemp: form.openaiTemp,
+        openaiModel: form.openaiModel,
+        openaiMaxTokens: form.openaiMaxTokens
       });
     } catch (e) {
       console.error(e);

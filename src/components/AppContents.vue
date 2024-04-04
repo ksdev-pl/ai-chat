@@ -76,8 +76,8 @@
       const stream = await openai.chat.completions.create({
         messages: chatStore.currentChat.messages as ChatCompletionMessageParam[],
         model: settingsStore.model,
-        temperature: settingsStore.temp,
-        max_tokens: settingsStore.maxTokens,
+        temperature: +settingsStore.temp,
+        max_tokens: +settingsStore.maxTokens,
         stream: true
       });
       for await (const chunk of stream) {
