@@ -123,7 +123,7 @@
   <div class="flex flex-1 flex-col overflow-auto">
     <fwb-alert closable
                type="danger"
-               class="mt-4 ml-4 mr-4"
+               class="mt-4 ml-4 mr-4 gap-0"
                v-for="error in appStore.errors"
                :key="error.id"
                @close="appStore.removeError(error.id)">
