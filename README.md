@@ -1,4 +1,4 @@
-# ✨ai-chat✨
+## ![Screenshot](public/favicon.ico) AI Chat
 
 ![Screenshot](.github/screenshot.jpg)
 
@@ -10,7 +10,7 @@ Works purely in the browser, with no backend/server communication. Data is store
 
 I coded it for my own use.
 
-## Project Setup
+### Project Setup
 
 ```sh
 npm install
