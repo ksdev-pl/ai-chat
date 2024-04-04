@@ -1,4 +1,4 @@
-# <img src="https://raw.githubusercontent.com/ksdev-pl/ai-chat/master/public/icon-192.png" alt="Alt text for your image" width="50" height="50"/> AI Chat
+# <img src="https://raw.githubusercontent.com/ksdev-pl/ai-chat/master/public/icon-192.png" alt="Logo" width="50" height="50"/> AI Chat
 
 ![Screenshot](.github/screenshot.jpg)
 
