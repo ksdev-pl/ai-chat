@@ -188,6 +188,7 @@
       display: table;
       border-radius: 5px;
       padding: 0 5px;
+      white-space: pre-wrap;
     }
 
     code:not(pre code) {
