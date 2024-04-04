@@ -40,7 +40,7 @@
 
 
   onMounted(() => {
-    setTimeout(() => inputTextarea.value?.focus(), 10);
+    setTimeout(() => inputTextarea.value?.focus(), 100);
   });
 
   const openai = new OpenAI({
