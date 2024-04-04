@@ -2,8 +2,8 @@
   import {FwbButton, FwbInput, FwbModal, FwbSelect} from 'flowbite-vue';
   import {computed, ref, watch} from 'vue';
   import {useSettingsStore} from '@/stores/settings.store';
-  import type {SettingsForm} from '@/models/settings-form.model';
   import {number, object, string} from 'zod';
+  import type {Settings} from '@/models/settings.model';
 
   const models = [
       {name: 'gpt-3.5-turbo', value: 'gpt-3.5-turbo'},
@@ -13,18 +13,18 @@
 
   const settingsStore = useSettingsStore();
 
-  const form = ref<SettingsForm>({
-    apiKey: '',
-    temp: 0,
-    model: '',
-    maxTokens: 0
+  const form = ref<Settings>({
+    openaiApiKey: '',
+    openaiTemp: '',
+    openaiModel: '',
+    openaiMaxTokens: ''
   });
 
   const formSchema = object({
-    apiKey: string().min(1),
-    temp: number(),
-    model: string(),
-    maxTokens: number()
+    openaiApiKey: string().min(1),
+    openaiTemp: number(),
+    openaiModel: string(),
+    openaiMaxTokens: number()
   });
 
   settingsStore.reloadSettings();
@@ -40,10 +40,10 @@
 
   watch(() => settingsStore.dbReloadCount, (newValue, oldValue) => {
     if (newValue !== oldValue) {
-      form.value.apiKey = settingsStore.apiKey;
-      form.value.temp = settingsStore.temp;
-      form.value.model = settingsStore.model;
-      form.value.maxTokens = settingsStore.maxTokens;
+      form.value.openaiApiKey = settingsStore.apiKey;
+      form.value.openaiTemp = settingsStore.temp;
+      form.value.openaiModel = settingsStore.model;
+      form.value.openaiMaxTokens = settingsStore.maxTokens;
     }
   });
 </script>
@@ -54,10 +54,10 @@
       <div class="text-lg">OpenAI settings</div>
     </template>
     <template #body>
-      <div class="mb-3"><fwb-input v-model="form.apiKey" label="API key" type="password" /></div>
-      <div class="mb-3"><fwb-select v-model="form.model" label="Model" placeholder="Select one" :options="models" /></div>
-      <div class="mb-3"><fwb-input v-model="form.maxTokens" label="Max tokens" type="number"  /></div>
-      <div><fwb-input v-model="form.temp" label="Temperature" type="number" step="0.1"  /></div>
+      <div class="mb-3"><fwb-input v-model="form.openaiApiKey" label="API key" type="password" /></div>
+      <div class="mb-3"><fwb-select v-model="form.openaiModel" label="Model" placeholder="Select one" :options="models" /></div>
+      <div class="mb-3"><fwb-input v-model="form.openaiMaxTokens" label="Max tokens" type="number"  /></div>
+      <div><fwb-input v-model="form.openaiTemp" label="Temperature" type="number" step="0.1"  /></div>
     </template>
     <template #footer>
       <div class="flex justify-end">

@@ -4,16 +4,16 @@ import {db} from '@/db';
 import type {SettingsForm} from '@/models/settings-form.model';
 
 export const useSettingsStore = defineStore('settings', () => {
-  const DEFAULT_OPENAI_TEMP = 0.7;
+  const DEFAULT_OPENAI_TEMP = '0.7';
   const DEFAULT_OPENAI_MODEL = 'gpt-3.5-turbo';
-  const DEFAILT_OPENAI_MAX_TOKENS = 2025;
+  const DEFAILT_OPENAI_MAX_TOKENS = '2025';
 
   const areSettingsVisible = ref(false);
 
   const apiKey = ref<string>('');
-  const temp = ref<number>(0);
+  const temp = ref<string>('');
   const model = ref<string>('');
-  const maxTokens = ref<number>(0);
+  const maxTokens = ref<string>('');
   const dbReloadCount = ref(0);
 
   function showSettings() {

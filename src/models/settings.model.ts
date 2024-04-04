@@ -1,7 +1,7 @@
 export interface Settings {
   id?: number;
   openaiApiKey: string;
-  openaiTemp: number;
+  openaiTemp: string;
   openaiModel: string;
-  openaiMaxTokens: number;
+  openaiMaxTokens: string;
 }
