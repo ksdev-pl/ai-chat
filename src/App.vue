@@ -3,6 +3,7 @@
   import AppContents from '@/components/AppContents.vue';
   import AppHeader from '@/components/AppHeader.vue';
   import AppOptions from '@/components/AppSettings.vue';
+  import AppAbout from '@/components/AppAbout.vue';
 </script>
 
 <template>
@@ -13,5 +14,6 @@
       <AppContents/>
     </div>
   </div>
-  <AppOptions></AppOptions>
+  <AppOptions/>
+  <AppAbout/>
 </template>
