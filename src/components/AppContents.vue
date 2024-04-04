@@ -8,7 +8,8 @@
   import MarkdownIt from 'markdown-it';
   import hljs from 'highlight.js';
   import {useSettingsStore} from '@/stores/settings.store';
-  import {FwbButton, FwbSpinner} from 'flowbite-vue';
+  import {FwbAlert, FwbButton, FwbSpinner} from 'flowbite-vue';
+  import {useAppStore} from '@/stores/app.store';
 
   const input = ref('');
   const numOfInputRows = ref(1);
@@ -17,6 +18,7 @@
   const userScrolled = ref(false);
   const pending = ref(false);
 
+  const appStore = useAppStore();
   const chatStore = useChatStore();
   const settingsStore = useSettingsStore();
 
@@ -50,13 +52,19 @@
 
   async function onSend() {
     pending.value = true;
-    userScrolled.value = false;
-    inputTextarea.value?.blur();
-    await chatStore.addMessage({role: Role.user, content: input.value});
-    autoScrollDown();
-    sendRequestForTitle(input.value);
-    input.value = '';
-    await sendRequestForResponse();
+    try {
+      userScrolled.value = false;
+      inputTextarea.value?.blur();
+      await chatStore.addMessage({role: Role.user, content: input.value});
+      autoScrollDown();
+      sendRequestForTitle(input.value);
+      input.value = '';
+      await sendRequestForResponse();
+    } catch (e) {
+      if (e instanceof Error) {
+        appStore.addError(e.message);
+      }
+    }
     pending.value = false;
   }
 
@@ -113,6 +121,14 @@
 
 <template>
   <div class="flex flex-1 flex-col overflow-auto">
+    <fwb-alert closable
+               type="danger"
+               class="mt-4 ml-4 mr-4"
+               v-for="error in appStore.errors"
+               :key="error.id"
+               @close="appStore.removeError(error.id)">
+      {{error.message}}
+    </fwb-alert>
     <main class="flex-1 p-4 overflow-auto" ref="scrollingDiv" @scroll="checkIfUserScrolled()">
       <template v-if="chatStore.currentChat">
         <template v-for="(message, index) in chatStore.currentChat.messages" :key="index">
