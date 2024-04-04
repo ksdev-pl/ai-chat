@@ -6,6 +6,7 @@ const appStore = useAppStore();
 </script>
 
 <template>
+  test
   <fwb-modal v-if="appStore.isAboutVisible" @close="appStore.hideAbout()">
     <template #header>
       <div class="text-lg">About</div>
