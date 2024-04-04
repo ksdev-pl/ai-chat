@@ -14,7 +14,7 @@ const appStore = useAppStore();
       <div class="flex">
         <div><img src="/icon-512.png" alt="Logo"/></div>
         <div class="ml-5"><pre class="text-xs">
-<b>AI Chat 1.1</b>
+<b>AI Chat 1.2</b>
 
 Source code, additional information and contact:
 <a href="https://github.com/ksdev-pl/ai-chat" class="hover:text-blue-600">https://github.com/ksdev-pl/ai-chat</a>
