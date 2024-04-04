@@ -11,7 +11,9 @@ const appStore = useAppStore();
       <div class="text-lg">About</div>
     </template>
     <template #body>
-      <pre class="whitespace-pre-wrap text-xs">
+      <div class="flex">
+        <div><img src="/icon-512.png" alt="Logo"/></div>
+        <div class="ml-5"><pre class="text-xs">
 <b>AI Chat 1.1</b>
 
 Source code, additional information and contact:
@@ -19,6 +21,9 @@ Source code, additional information and contact:
 
 License:
 AGPL-3.0
+        </pre></div>
+      </div>
+      <pre class="whitespace-pre-wrap text-xs">
 
 <b>Disclaimer</b>
 
@@ -49,3 +54,10 @@ This disclaimer constitutes the entire agreement between you and AI Chat regardi
     </template>
   </fwb-modal>
 </template>
+
+<style scoped>
+  img {
+    width: 110px;
+    height: 110px;
+  }
+</style>
