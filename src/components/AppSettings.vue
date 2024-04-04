@@ -2,8 +2,9 @@
   import {FwbButton, FwbInput, FwbModal, FwbSelect} from 'flowbite-vue';
   import {computed, ref, watch} from 'vue';
   import {useSettingsStore} from '@/stores/settings.store';
-  import {number, object, string} from 'zod';
+  import {any, object, string} from 'zod';
   import type {Settings} from '@/models/settings.model';
+  import validator from 'validator';
 
   const models = [
       {name: 'gpt-3.5-turbo', value: 'gpt-3.5-turbo'},
@@ -22,9 +23,9 @@
 
   const formSchema = object({
     openaiApiKey: string().min(1),
-    openaiTemp: number(),
+    openaiTemp: any().transform((val) => val.toString()).refine(val => validator.isFloat(val)),
     openaiModel: string(),
-    openaiMaxTokens: number()
+    openaiMaxTokens: any().transform((val) => val.toString()).refine(val => validator.isFloat(val))
   });
 
   settingsStore.reloadSettings();
