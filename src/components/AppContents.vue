@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import {computed, ref, watch} from 'vue';
+  import {computed, onMounted, ref, watch} from 'vue';
   import OpenAI from 'openai';
   import {PlayIcon} from '@heroicons/vue/24/outline';
   import type {ChatCompletionMessageParam} from 'openai/resources/chat/completions';
@@ -37,6 +37,11 @@
 
   const isInputEnabled = computed(() => settingsStore.apiKey.length > 0 && !pending.value);
   const isSendBtnEnabled = computed(() => input.value?.trim().length > 0 && settingsStore.apiKey.trim().length > 0);
+
+
+  onMounted(() => {
+    setTimeout(() => inputTextarea.value?.focus(), 10);
+  });
 
   const openai = new OpenAI({
     apiKey: settingsStore.apiKey,
@@ -131,8 +136,7 @@
                 ref="inputTextarea"
                 v-model="input"
                 @keydown.ctrl.enter="onSend"
-                :disabled="!isInputEnabled"
-                autofocus/>
+                :disabled="!isInputEnabled"/>
       <fwb-button color="default"
                   @click="onSend"
                   :disabled="!isSendBtnEnabled"
