@@ -12,7 +12,7 @@ const appStore = useAppStore();
     </template>
     <template #body>
       <pre class="whitespace-pre-wrap text-xs">
-<b>AI Chat 1.0</b>
+<b>AI Chat 1.1</b>
 
 Source code, additional information and contact:
 <a href="https://github.com/ksdev-pl/ai-chat" class="hover:text-blue-600">https://github.com/ksdev-pl/ai-chat</a>
