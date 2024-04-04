@@ -1,5 +1,7 @@
 # <img src="https://raw.githubusercontent.com/ksdev-pl/ai-chat/master/public/icon-192.png" alt="Logo" width="25" height="25"/> AI Chat
 
+### 🔗 [aichat.ksdev.pl](https://aichat.ksdev.pl)
+
 ![Screenshot](.github/screenshot.jpg)
 
 Yet another AI chat with original name. Currenly connects only to OpenAI models.
