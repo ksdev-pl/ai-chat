@@ -8,7 +8,7 @@ const appStore = useAppStore();
 <template>
   <fwb-modal v-if="appStore.isAboutVisible" @close="appStore.hideAbout()">
     <template #header>
-      <div class="text-lg">About test</div>
+      <div class="text-lg">About</div>
     </template>
     <template #body>
       <div class="flex">
