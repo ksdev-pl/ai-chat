@@ -13,10 +13,10 @@
     <template #body>
       <div class="flex">
         <div><img src="/icon-512.png" alt="Logo"/></div>
-        <div class="ml-5"><pre class="text-xs">
+        <div class="ml-5"><pre class="whitespace-pre-wrap text-xs">
 <b>AI Chat 1.3</b>
 
-Source code, additional information and contact:
+Source, info and contact:
 <a href="https://github.com/ksdev-pl/ai-chat" class="hover:text-blue-600">https://github.com/ksdev-pl/ai-chat</a>
 
 License:
@@ -58,6 +58,5 @@ This disclaimer constitutes the entire agreement between you and AI Chat regardi
 <style scoped>
   img {
     width: 110px;
-    height: 110px;
   }
 </style>
