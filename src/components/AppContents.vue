@@ -134,7 +134,7 @@
         <template v-for="(message, index) in chatStore.currentChat.messages" :key="index">
           <template v-if="message.content && message.role === Role.user">
             <div class="flex">
-              <div class="bg-green-600 py-2 px-3 rounded mb-4 text-white whitespace-pre-wrap">{{message.content}}</div>
+              <div class="border-green-600 border-2 border-solid py-2 px-3 rounded mb-4 message-content" v-html="md.render(message.content)"/>
             </div>
           </template>
           <template v-if="message.content && message.role === Role.assistant">
