@@ -11,7 +11,7 @@
       {name: 'gpt-4-turbo', value: 'gpt-4-turbo'},
       {name: 'gpt-4-turbo-preview', value: 'gpt-4-turbo-preview'},
       {name: 'gpt-4', value: 'gpt-4'},
-      {name: 'gtp-4o', value: 'gtp-4o'}
+      {name: 'gpt-4o', value: 'gpt-4o'}
     ];
 
   const settingsStore = useSettingsStore();
