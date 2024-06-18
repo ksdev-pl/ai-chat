@@ -6,7 +6,7 @@
 </script>
 
 <template>
-  <fwb-modal v-if="appStore.isAboutVisible" @close="appStore.hideAbout()">
+  <fwb-modal v-if="appStore.isAboutVisible" @close="appStore.hideAbout()" not-escapable persistent>
     <template #header>
       <div class="text-lg">About</div>
     </template>

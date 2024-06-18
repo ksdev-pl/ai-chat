@@ -52,7 +52,7 @@
 </script>
 
 <template>
-  <fwb-modal v-if="settingsStore.areSettingsVisible" @close="settingsStore.hideSettings()">
+  <fwb-modal v-if="settingsStore.areSettingsVisible" @close="settingsStore.hideSettings()" not-escapable persistent>
     <template #header>
       <div class="text-lg">OpenAI settings</div>
     </template>
