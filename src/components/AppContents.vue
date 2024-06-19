@@ -77,8 +77,8 @@
             + `Output only the summarized title. The input is: ${message}`
         }],
         model: 'gpt-3.5-turbo',
-        temperature: 0.4,
-        max_tokens: 2025
+        temperature: 0.5,
+        max_tokens: 1000
       });
       await chatStore.setCurrentChatTitle(completion.choices[0].message.content);
     }
