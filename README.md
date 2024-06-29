@@ -31,5 +31,5 @@ npm run build
 ### Run with Docker
 
 ```sh
-docker-compose up # http://localhost:5173
+docker compose up # http://localhost:5173
 ```
