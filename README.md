@@ -27,3 +27,9 @@ npm run dev
 ```sh
 npm run build
 ```
+
+### Run with Docker
+
+```sh
+docker compose up # http://localhost:5173
+```
