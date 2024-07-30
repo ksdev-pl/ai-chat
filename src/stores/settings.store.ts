@@ -5,7 +5,7 @@ import type {Settings} from '@/models/settings.model';
 
 export const useSettingsStore = defineStore('settings', () => {
   const DEFAULT_OPENAI_TEMP = '0.5';
-  const DEFAULT_OPENAI_MODEL = 'gpt-3.5-turbo';
+  const DEFAULT_OPENAI_MODEL = 'gpt-4o-mini';
   const DEFAILT_OPENAI_MAX_TOKENS = '4096';
 
   const areSettingsVisible = ref(false);

@@ -76,7 +76,7 @@
           content: 'Summarize the input as title of no more than 5 words.'
             + `Output only the summarized title. The input is: ${message}`
         }],
-        model: 'gpt-3.5-turbo',
+        model: 'gpt-4o-mini',
         temperature: 0.5,
         max_tokens: 1000
       });
