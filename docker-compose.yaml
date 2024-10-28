@@ -2,4 +2,12 @@ services:
   app:
     build: "."
     ports:
-      - "5173:5173"
+      - "${PORT}:5173"
+
+  done:
+    depends_on:
+      app:
+        condition: service_started
+    image: busybox:glibc
+    command: >
+      echo 'open http://localhost:${PORT}'

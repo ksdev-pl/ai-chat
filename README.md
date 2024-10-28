@@ -33,3 +33,9 @@ npm run build
 ```sh
 docker compose up # http://localhost:5173
 ```
+
+With a custom port:
+
+```sh
+PORT=8080 docker compose up
+```
