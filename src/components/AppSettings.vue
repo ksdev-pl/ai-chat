@@ -7,14 +7,9 @@
   import validator from 'validator';
 
   const models = [
-      {name: 'gpt-3.5-turbo', value: 'gpt-3.5-turbo'},
-      {name: 'gpt-4-turbo', value: 'gpt-4-turbo'},
-      {name: 'gpt-4-turbo-preview', value: 'gpt-4-turbo-preview'},
-      {name: 'gpt-4', value: 'gpt-4'},
-      {name: 'gpt-4o', value: 'gpt-4o'},
-      {name: 'gpt-4o-mini', value: 'gpt-4o-mini'},
-      {name: 'gpt-4o-2024-08-06', value: 'gpt-4o-2024-08-06'},
-      {name: 'chatgpt-4o-latest', value: 'chatgpt-4o-latest'}
+      {name: 'gpt-4.1', value: 'gpt-4.1'},
+      {name: 'gpt-4.1-mini', value: 'gpt-4.1-mini'},
+      {name: 'gpt-4.1-nano', value: 'gpt-4.1-nano'}
     ];
 
   const settingsStore = useSettingsStore();
