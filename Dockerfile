@@ -1,27 +1,31 @@
 # ---- Stage 1: The Builder ----
-# Use a Node.js image to build the project
 FROM node:24-alpine AS builder
+
+# Enable pnpm via Corepack
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN corepack enable
 
 WORKDIR /app
 
-# Copy package files and install dependencies
-COPY package*.json ./
-RUN npm ci
+# Copy only lockfile + manifest first to maximize layer cache
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 
-# Copy the rest of the source code
+RUN pnpm install --frozen-lockfile
+
+# Copy the rest of the source
 COPY . .
 
-# Run the production build
-RUN npm run build
+# Build production assets
+RUN pnpm run build
 
-# ---- Stage 2: The Final Image (Using Caddy) ----
-# Use a lightweight Caddy image
+# ---- Stage 2: The Final Image (Caddy) ----
 FROM caddy:2-alpine
 
-# Copy the built assets from the 'builder' stage to Caddy's default web root
+# Copy built assets to Caddy's default web root
 COPY --from=builder /app/dist /usr/share/caddy
 
-# Copy the Caddy configuration file
+# Caddy configuration
 COPY Caddyfile /etc/caddy/Caddyfile
 
 EXPOSE 5173
