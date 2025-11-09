@@ -1,4 +1,11 @@
+# Listen on port 5173 inside the container.
 :5173 {
+    # Set the root directory for your static files.
     root * /usr/share/caddy
+
+    # Enable Zstandard and Gzip compression.
+    encode
+
+    # Finally, enable the static file server.
     file_server
 }

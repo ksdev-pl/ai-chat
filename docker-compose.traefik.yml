@@ -1,0 +1,19 @@
+services:
+  web:
+    build: . # Build the image from the Dockerfile in this directory
+    container_name: aichat-ksdev-pl
+    restart: unless-stopped
+    # The 'ports' section is removed! Traefik handles this.
+    networks:
+      - web-proxy # Connect to the shared Traefik network
+    labels:
+      # --- Traefik Labels ---
+      - "traefik.enable=true"
+      - "traefik.http.routers.aichat-ksdev-pl.rule=Host(`${DOMAIN}`)"
+      - "traefik.http.routers.aichat-ksdev-pl.entrypoints=websecure"
+      - "traefik.http.routers.aichat-ksdev-pl.tls=true"
+      - "traefik.http.services.aichat-ksdev-pl.loadbalancer.server.port=5173"
+
+networks:
+  web-proxy:
+    external: true
