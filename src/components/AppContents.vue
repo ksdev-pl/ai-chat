@@ -14,8 +14,6 @@
   const input = ref('');
   const numOfInputRows = ref(1);
   const inputTextarea = ref<HTMLTextAreaElement|null>(null);
-  const scrollingDiv = ref<HTMLElement|null>(null);
-  const userScrolled = ref(false);
   const pending = ref(false);
 
   const appStore = useAppStore();
@@ -53,10 +51,8 @@
   async function onSend() {
     pending.value = true;
     try {
-      userScrolled.value = false;
       inputTextarea.value?.blur();
       await chatStore.addMessage({role: Role.user, content: input.value});
-      autoScrollDown();
       sendRequestForTitle(input.value);
       input.value = '';
       await sendRequestForResponse();
@@ -95,20 +91,7 @@
       });
       for await (const chunk of stream) {
         await chatStore.updateLastMessageStream(chunk.choices[0]?.delta?.content || '');
-        autoScrollDown();
       }
-    }
-  }
-
-  function autoScrollDown() {
-    if (scrollingDiv.value && !userScrolled.value) {
-      scrollingDiv.value.scrollTop = scrollingDiv.value.scrollHeight;
-    }
-  }
-
-  function checkIfUserScrolled() {
-    if (scrollingDiv.value) {
-      userScrolled.value = scrollingDiv.value.scrollTop + scrollingDiv.value.clientHeight !== scrollingDiv.value.scrollHeight;
     }
   }
 
@@ -129,7 +112,7 @@
                @close="appStore.removeError(error.id)">
       {{error.message}}
     </fwb-alert>
-    <main class="flex-1 p-4 overflow-auto" ref="scrollingDiv" @scroll="checkIfUserScrolled()">
+    <main class="flex-1 p-4 overflow-auto">
       <template v-if="chatStore.currentChat">
         <template v-for="(message, index) in chatStore.currentChat.messages" :key="index">
           <template v-if="message.content && message.role === Role.user">
